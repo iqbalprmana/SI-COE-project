@@ -557,20 +557,42 @@ package Screen
 		
 		private function copyDone(event:Event):void {
 			flagCopyVideo = true;
+			mcLoading.txtProgress.text = "Finalizing...";
+			
+			var myTimer:Timer = new Timer(1000, 1);
+			myTimer.start();
+			myTimer.addEventListener(TimerEvent.TIMER_COMPLETE, timerVideoDone);
+		}
+		
+		private function timerVideoDone(e:TimerEvent):void {
 			cekUpdateDone();
 		}
 		
 		private function cekUpdateDone():void {
 			if (videoAvailable){
-				if (flagUpdate && flagCopyVideo){
-					mainClass.showSplash(new ScreenManajemen1(mainClass));
+				if (flagUpdate && flagCopyVideo) {	
+					mcLoading.mcLoad.visible = false;
+					mcLoading.txtProgress.width = 300;
+					mcLoading.txtProgress.text = "ARTIKEL BERHASIL DISIMPAN";
+					var myTimer:Timer = new Timer(2000, 1);
+					myTimer.start();
+					myTimer.addEventListener(TimerEvent.TIMER_COMPLETE, timerAllDone);
 				}
 			}
 			else {
-				if (flagUpdate){
-					mainClass.showSplash(new ScreenManajemen1(mainClass));
+				if (flagUpdate) {
+					mcLoading.mcLoad.visible = false;
+					mcLoading.txtProgress.width = 300;
+					mcLoading.txtProgress.text = "ARTIKEL BERHASIL DISIMPAN";
+					var myTimer:Timer = new Timer(2000, 1);
+					myTimer.start();
+					myTimer.addEventListener(TimerEvent.TIMER_COMPLETE, timerAllDone);
 				}
 			}
+		}
+		
+		private function timerAllDone(e:TimerEvent):void {
+			mainClass.showSplash(new ScreenManajemen1(mainClass));
 		}
 		
 		private function getData2Error(event:SQLErrorEvent):void {

@@ -217,7 +217,8 @@ package Screen
 		private function onImageLoaded(e:Event):void {			
 			var targetLoader:Loader = Loader(e.target.loader);
 			targetLoader.width = 320;
-			targetLoader.height = 250;
+			//targetLoader.height = 250;
+			targetLoader.height = (targetLoader.content.height / targetLoader.content.width) * targetLoader.width;
 		}
 				
 		private function getDataError(event:SQLErrorEvent):void {
