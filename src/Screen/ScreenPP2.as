@@ -114,7 +114,7 @@ package Screen
 		private var isMuted:Boolean;
 		private var btnVidFullscreen:BtnVidFullscreen;
 		private var isFullscreen:Boolean;
-		private var soundTransform:SoundTransform;
+		//private var soundTransform:SoundTransform;
 		private var mcShadeVideo:McShade;
 		private var mcVidVolumeFill:McVidFillRed;
 		private var mcVidVolScrubber:McVidScrubber;

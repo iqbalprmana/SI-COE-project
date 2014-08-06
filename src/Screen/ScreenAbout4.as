@@ -211,7 +211,7 @@ package Screen
 				
 				// Labels
 				var txtLabelJuara:TextField = new TextField();
-				txtLabelJuara.text = "JUARA";
+				txtLabelJuara.text = "      JUARA";
 				txtLabelJuara.setTextFormat(formatLabel);
 				txtLabelJuara.embedFonts = true;
 				txtLabelJuara.selectable = false;
@@ -224,7 +224,7 @@ package Screen
 				txtLabelTahun.selectable = false;
 				*/
 				var txtLabelKat:TextField = new TextField();
-				txtLabelKat.text = "KATEGORI";
+				txtLabelKat.text = "      KATEGORI";
 				txtLabelKat.setTextFormat(formatLabel);
 				txtLabelKat.embedFonts = true;
 				txtLabelKat.selectable = false;
@@ -298,12 +298,12 @@ package Screen
 				txtTahun.x = 100;
 				*/
 				//txtLabelJuara.y = txtTahun.y + txtTahun.height + 5;
-				txtLabelJuara.y = txtJudul.y + txtJudul.height + 5;
+				txtLabelJuara.y = txtJudul.y + txtJudul.height + 2;
 				txtJuara.y = txtLabelJuara.y;
-				txtJuara.x = 100;
-				txtLabelKat.y = txtJuara.y + txtJuara.height + 5;
+				txtJuara.x = 150;
+				txtLabelKat.y = txtJuara.y + txtJuara.height + 2;
 				txtKat.y = txtLabelKat.y;
-				txtKat.x = 100;
+				txtKat.x = 150;
 				/*
 				txtLabelKet.y = txtKat.y + txtKat.height + 5;
 				txtKet.y = txtLabelKet.y;

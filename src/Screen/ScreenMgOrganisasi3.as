@@ -35,6 +35,7 @@ package Screen
 		private var numID:int;
 		private var curDept:int;
 		private var curSubDept:int;
+		private var prevJabatan:String;
 		
 		// delete images & update
 		private var originalImg:Boolean; // true if available from the beginning
@@ -315,7 +316,8 @@ package Screen
 			curDept = row.iddept;
 			curSubDept = row.idsubdept;
 			toggleFormSubDeptVisible();
-			
+			prevJabatan = row.jabatanEn;
+
 			trace("Dept dan subdept " + curDept +" "+ curSubDept);
 			
 			if (row.pathFoto != null && row.pathFoto != "" && row.pathFoto != "null") {
@@ -389,7 +391,8 @@ package Screen
 			if (txtFormNama.text != "" && curDept != 0) 
 			{
 				if (curSubDept == 0) {
-					if (txtFormRole.text == "General Manager") {
+					trace(prevJabatan);
+					if (curDept == 1 || curDept == 3) {
 						curSubDept = 0;
 						trace("first");
 						return true;
@@ -410,6 +413,10 @@ package Screen
 					trace("third " + curDept);
 					return true;
 				}
+			}
+			else if (txtFormNama.text != "" && curDept == 0) // Khusus Direktur
+			{
+				return true;
 			}
 			else {
 				trace("forth");
