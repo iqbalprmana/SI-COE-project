@@ -197,7 +197,7 @@ package Screen
 			// Gambar
 			imageMC2 = new MovieClip();
 			var myLoader:Loader = new Loader();
-			var fileRequest:URLRequest = new URLRequest(row.pathImg);
+			var fileRequest:URLRequest = new URLRequest("Images/about-us-sejarah3.jpg");
 			myLoader.load(fileRequest);
 			myLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoaded);
 			imageMC2.addChild(myLoader);
@@ -205,7 +205,7 @@ package Screen
 			imageMC2.x = 80;
 			
 			// Summary
-			var txtSum:TextField = new TextField();
+			/*var txtSum:TextField = new TextField();
 			if (mainClass.bahasa) txtSum.text = row.sumId;
 			else txtSum.text = row.sumEn;
 			format.size = 20;
@@ -220,31 +220,31 @@ package Screen
 			txtSum.y = 400;
 			txtSum.x = 200;
 			txtSum.selectable = false;
-			
+			*/
 			// Gambar inline 1
-			imageMC3 = new MovieClip();
+			/*imageMC3 = new MovieClip();
 			var myLoader3:Loader = new Loader();
 			var fileRequest3:URLRequest = new URLRequest("Images/about-us-sejarah2.jpg");
 			myLoader3.load(fileRequest3);
 			myLoader3.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoaded3);
 			imageMC3.addChild(myLoader3);
 			imageMC3.y = 110;
-			
+			*/
 			// Gambar inline 2
 			imageMC4 = new MovieClip();
 			var myLoader4:Loader = new Loader();
-			var fileRequest4:URLRequest = new URLRequest("Images/about-us-sejarah3.jpg");
+			var fileRequest4:URLRequest = new URLRequest("Images/about-us-sejarah2.jpg");
 			myLoader4.load(fileRequest4);
 			myLoader4.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoaded4);
 			imageMC4.addChild(myLoader4);
-			if (mainClass.bahasa) imageMC4.y = 570;
-			else imageMC4.y = 540;
+			if (mainClass.bahasa) imageMC4.y = 300;
+			else imageMC4.y = 260;
 			
 			// addchild ke movieclip
 			addChild(txtJudul);
 			addChild(imageMC2);
-			addChild(txtSum);
-			container2.addChild(imageMC3);
+			//addChild(txtSum);
+			//container2.addChild(imageMC3);
 			container2.addChild(imageMC4);
 			container2.addChild(txtArt);
 			
@@ -256,7 +256,7 @@ package Screen
 			
 			container2Animation();
 			
-			var mcShade = new McShadeBtm();
+			var mcShade:MovieClip = new McShadeBtm();
 			mcShade.mouseEnabled = false;
 			mcShade.y = 600;
 			addChild(mcShade);
@@ -264,8 +264,8 @@ package Screen
 		
 		private function onImageLoaded(e:Event):void {			
 			var targetLoader:Loader = Loader(e.target.loader);
-			targetLoader.width = 400;
-			targetLoader.height = 280;
+			targetLoader.width = 350;
+			targetLoader.height = 500;
 		}
 		
 		private function onImageLoaded3(e:Event):void {			
@@ -277,7 +277,7 @@ package Screen
 		private function onImageLoaded4(e:Event):void {			
 			var targetLoader:Loader = Loader(e.target.loader);
 			targetLoader.width = 350;
-			targetLoader.height = 500;
+			targetLoader.height = 240;
 		}
 				
 		private function getDataError(event:SQLErrorEvent):void {

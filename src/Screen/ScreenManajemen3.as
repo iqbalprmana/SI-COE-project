@@ -9,6 +9,8 @@ package Screen
 	import flash.events.MouseEvent;
 	import flash.data.SQLConnection;
 	import flash.data.SQLStatement;
+	import flash.events.OutputProgressEvent;
+	import flash.events.ProgressEvent;
 	import flash.events.TimerEvent;
 	import flash.net.FileFilter;
 	import flash.text.TextField;
@@ -311,6 +313,7 @@ package Screen
 				txtVid.x = 990;
 				txtVid.y = 580;
 				txtVid.width = 200;
+				txtVid.height = 50;
 				txtVid.selectable = false;
 				
 				// generate del button
@@ -829,7 +832,8 @@ package Screen
 			// delete video jika
 			if (flagVidBerubah || pathOldVid == "") {
 				// user punya video di pathOldVid
-				if(pathOldVid != ""){
+				if (pathOldVid != "") {
+					
 					var fileToDelete:String = pathOldVid;
 					var pathToFile:String = File.applicationDirectory.resolvePath(fileToDelete).nativePath;
 					var someFile:File = new File(pathToFile);
@@ -842,13 +846,18 @@ package Screen
 					var pathToFile:String = File.applicationDirectory.resolvePath(fileVidName).nativePath;
 					var someFile:File = new File(pathToFile);
 					vidFile.addEventListener(Event.COMPLETE, copyDone);
-					vidFile.copyToAsync(someFile);
+					vidFile.copyToAsync(someFile, true);
 					mcLoading.txtProgress.text = "Copying file...";
 				}
 			}
 			
 			flagUpdate = true;
 			cekUpdateDone();
+		}
+		
+		private function ProgressHandler(e:OutputProgressEvent):void 
+		{
+			trace("Uploaded : " + e.bytesPending, e.bytesTotal);
 		}
 		
 		private function copyDone(event:Event):void {
@@ -1126,6 +1135,7 @@ package Screen
 			txtVid.x = 990;
 			txtVid.y = 580;
 			txtVid.width = 200;
+			txtVid.height = 50;
 			txtVid.selectable = false;
 			
 			// generate del button

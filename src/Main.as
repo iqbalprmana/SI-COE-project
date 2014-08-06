@@ -228,22 +228,22 @@ package
 		}
 		
 		private function setBackground():void {
-			if (whichBg == "1") {
+			if (whichBg == 1) {
 				bgSource = Bg1;
 			}
-			else if (whichBg == "2") {
+			else if (whichBg == 2) {
 				bgSource = Bg2;
 			}
-			else if (whichBg == "3") {
+			else if (whichBg == 3) {
 				bgSource = Bg3;
 			}
-			else if (whichBg == "4") {
+			else if (whichBg == 4) {
 				bgSource = Bg4;
 			}
-			else if (whichBg == "5") {
+			else if (whichBg == 5) {
 				bgSource = Bg5;
 			}
-			else if (whichBg == "6") {
+			else if (whichBg == 6) {
 				bgSource = Bg6;
 			}
 			

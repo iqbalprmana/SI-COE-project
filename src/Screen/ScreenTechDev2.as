@@ -18,6 +18,7 @@ package Screen
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.errors.SQLError;
+	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
 	import flash.data.SQLConnection;
 	import flash.data.SQLResult;
@@ -113,7 +114,7 @@ package Screen
 		private var isMuted:Boolean;
 		private var btnVidFullscreen:BtnVidFullscreen;
 		private var isFullscreen:Boolean;
-		private var soundTransform:SoundTransform;
+		//private var soundTransform:SoundTransform;
 		private var mcShadeVideo:McShade;
 		private var mcVidVolumeFill:McVidFillRed;
 		private var mcVidVolScrubber:McVidScrubber;
@@ -175,6 +176,7 @@ package Screen
 		private function getData():void {
 			selectStmt = new SQLStatement();
 			selectStmt.sqlConnection = conn;
+			trace("selectedPP = " + selectedPP);
 			var sql:String = "select * from techdev where idtd = " + selectedPP;
 			selectStmt.text = sql;
 			
@@ -598,10 +600,14 @@ package Screen
 			var fileRequest:URLRequest;
 			
 			// 1
-			if (numResult >= 1) {
+			trace("numresult : " + numResult);
+			
+			
+			if (numResult >= 1) {trace(result.data[0].pathImg);
 				fileRequest = new URLRequest(result.data[0].pathImg);
 				myLoader.load(fileRequest);
 				myLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoaded);
+				
 				imageMC.addChild(myLoader);
 				imageMC.y = posYImage;
 				imageMC.x = 89.95;
@@ -629,7 +635,7 @@ package Screen
 			*/
 			
 			// 2
-			if (numResult >= 2) {
+			if (numResult >= 2) {trace(result.data[1].pathImg);
 				fileRequest = new URLRequest(result.data[1].pathImg);
 				myLoader2.load(fileRequest);
 				myLoader2.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoaded);
@@ -648,7 +654,7 @@ package Screen
 			}
 			
 			// 3
-			if (numResult >= 3) {
+			if (numResult >= 3) {trace(result.data[2].pathImg);
 				fileRequest = new URLRequest(result.data[2].pathImg);
 				myLoader3.load(fileRequest);
 				myLoader3.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoaded);
@@ -667,7 +673,7 @@ package Screen
 			}
 			
 			// 4
-			if (numResult >= 4) {
+			if (numResult >= 4) {trace(result.data[3].pathImg);
 				fileRequest = new URLRequest(result.data[3].pathImg);
 				myLoader4.load(fileRequest);
 				myLoader4.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoaded);
@@ -687,6 +693,7 @@ package Screen
 			
 			// 5
 			if (numResult >= 5) {
+				trace("masuk");
 				fileRequest = new URLRequest(result.data[4].pathImg);
 				myLoader5.load(fileRequest);
 				myLoader5.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageLoaded);
