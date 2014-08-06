@@ -20,11 +20,9 @@
   <!-- Build options -->
   <build>
     <option accessible="False" />
-    <option advancedTelemetry="False" />
     <option allowSourcePathOverlap="False" />
     <option benchmark="False" />
     <option es="False" />
-    <option inline="False" />
     <option locale="" />
     <option loadConfig="" />
     <option optimize="True" />
