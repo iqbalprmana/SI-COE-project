@@ -1,7 +1,7 @@
 :user_configuration
 
 :: Path to Flex SDK
-set FLEX_SDK=D:\SICOE\flex_sdk_4.6.0.23201_mpl
+set FLEX_SDK=D:\Master Application\flex_sdk_4.6.0.23201_mpl
 
 
 :validation
