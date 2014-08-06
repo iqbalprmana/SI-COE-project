@@ -5,22 +5,25 @@ package Screen
 	import Asset.McShade;
 	import flash.data.SQLResult;
 	import flash.display.MovieClip;
+	import flash.display.Shape;
 	import flash.errors.SQLError;
 	import flash.events.MouseEvent;
 	import flash.data.SQLConnection;
 	import flash.data.SQLStatement;
-	import flash.events.OutputProgressEvent;
-	import flash.events.ProgressEvent;
 	import flash.events.TimerEvent;
+	import flash.filesystem.FileStream;
 	import flash.net.FileFilter;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
 	import flash.events.SQLErrorEvent;
 	import flash.events.SQLEvent;
 	import flash.filesystem.File;
 	import flash.events.Event;
+	import flash.events.ProgressEvent;
+	import flash.filesystem.FileMode;
 	
 	import Asset.BtnDelete;
 	/**
@@ -89,6 +92,9 @@ package Screen
 		private var flagUpdate:Boolean;
 		private var flagCopyVideo:Boolean;
 		private var isCopying:Boolean;
+		private var inStream:FileStream;
+		private var outStream:FileStream;
+		private var progressBar:MC_VID_FILLRED;
 		
 		public function ScreenManajemen3(passedClass:Main, passedTable:int, passedID:int) 
 		{
@@ -256,6 +262,7 @@ package Screen
 				txtFormLokasi.visible = false;
 				mcKotakLokasi.visible = false;
 				txtLabelLokasi.visible = false;
+				txtTable.text = "TECH. DEVELOPMENT"
 			}
 			txtFormScope.text = row.scopeOfWork;
 			txtFormArea.text = row.area;
@@ -832,8 +839,7 @@ package Screen
 			// delete video jika
 			if (flagVidBerubah || pathOldVid == "") {
 				// user punya video di pathOldVid
-				if (pathOldVid != "") {
-					
+				if(pathOldVid != ""){
 					var fileToDelete:String = pathOldVid;
 					var pathToFile:String = File.applicationDirectory.resolvePath(fileToDelete).nativePath;
 					var someFile:File = new File(pathToFile);
@@ -845,9 +851,35 @@ package Screen
 					isCopying = true;
 					var pathToFile:String = File.applicationDirectory.resolvePath(fileVidName).nativePath;
 					var someFile:File = new File(pathToFile);
-					vidFile.addEventListener(Event.COMPLETE, copyDone);
-					vidFile.copyToAsync(someFile, true);
-					mcLoading.txtProgress.text = "Copying file...";
+					
+					// stream
+					inStream = new FileStream();
+					outStream = new FileStream();
+					
+					inStream.addEventListener(ProgressEvent.PROGRESS, onProgress);
+					inStream.addEventListener(Event.COMPLETE, onReady);
+					
+					inStream.openAsync(vidFile, FileMode.READ);
+					outStream.openAsync(someFile, FileMode.WRITE);
+					
+					//vidFile.addEventListener(Event.COMPLETE, copyDone);
+					//vidFile.copyToAsync(someFile);
+					mcLoading.txtProgress.width = 200;
+					mcLoading.txtProgress.text = "Copying...";
+					
+					progressBar = new MC_VID_FILLRED();
+					progressBar.x = 400;
+					progressBar.y = 400;
+					progressBar.width = 5;
+					
+					var progressWhite:Shape = new Shape(); 
+					progressWhite.graphics.lineStyle(1, 0x000000, 0.0); 
+					progressWhite.graphics.beginFill(0xffffff, 1.0); 
+					progressWhite.graphics.drawRect(progressBar.x, progressBar.y, 500, progressBar.height); 
+					progressWhite.graphics.endFill(); 
+					
+					addChild(progressWhite);
+					addChild(progressBar);
 				}
 			}
 			
@@ -855,12 +887,32 @@ package Screen
 			cekUpdateDone();
 		}
 		
-		private function ProgressHandler(e:OutputProgressEvent):void 
-		{
-			trace("Uploaded : " + e.bytesPending, e.bytesTotal);
+		private function onProgress(e:ProgressEvent):void {
+			// calculate the percentage
+			var pct:Number = Math.round(e.bytesLoaded/e.bytesTotal*100);
+
+			// if you want to update the progress bar:
+			mcLoading.txtProgress.text = "Copying... " + pct.toString() + " %";
+			progressBar.width = pct * 5;
+			
+			// if the ProgressEvent is fired, we have data available in the inStream, so we can start writing data
+			var bytes:ByteArray = new ByteArray();
+			inStream.readBytes(bytes, 0, inStream.bytesAvailable);
+			outStream.writeBytes(bytes, 0, bytes.length);
 		}
-		
-		private function copyDone(event:Event):void {
+
+
+		private function onReady(e:Event):void {
+			// the whole stream is read, so close the files
+			inStream.close();
+			outStream.close();
+
+			// dispatch a COMPLETE event to let listeners to this object know the copy is done
+			copyDone();
+		} 
+
+		//private function copyDone(event:Event):void {
+		private function copyDone():void {
 			flagCopyVideo = true;
 			mcLoading.txtProgress.text = "Finalizing...";
 			
@@ -877,6 +929,7 @@ package Screen
 			if (isCopying) {
 				if (flagUpdate && flagCopyVideo){
 					mcLoading.mcLoad.visible = false;
+					mcLoading.txtProgress.x -= 90;
 					mcLoading.txtProgress.width = 300;
 					mcLoading.txtProgress.text = "ARTIKEL BERHASIL DISIMPAN";
 					var myTimer:Timer = new Timer(2000, 1);
@@ -887,6 +940,7 @@ package Screen
 			else {
 				if (flagUpdate){
 					mcLoading.mcLoad.visible = false;
+					mcLoading.txtProgress.x -= 90;
 					mcLoading.txtProgress.width = 300;
 					mcLoading.txtProgress.text = "ARTIKEL BERHASIL DISIMPAN";
 					var myTimer:Timer = new Timer(2000, 1);
