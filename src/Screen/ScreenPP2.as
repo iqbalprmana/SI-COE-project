@@ -114,7 +114,7 @@ package Screen
 		private var isMuted:Boolean;
 		private var btnVidFullscreen:BtnVidFullscreen;
 		private var isFullscreen:Boolean;
-		//private var soundTransform:SoundTransform;
+		private var soundTransform:SoundTransform;
 		private var mcShadeVideo:McShade;
 		private var mcVidVolumeFill:McVidFillRed;
 		private var mcVidVolScrubber:McVidScrubber;
@@ -156,7 +156,10 @@ package Screen
 		}
 		
 		private function navHandler(e:MouseEvent):void {
-			if(getChildByName("vid") != null) ns.close();
+			if (getChildByName("vid") != null) {
+				ns.close();
+				mainClass.resetMusicVol();
+			}
 			mainClass.showSplash(new ScreenPP1(mainClass, selectedSemen));
 		}
 		
@@ -174,7 +177,10 @@ package Screen
 				case "btnSemenInd" : selectedSemen = 5; 
 										break;
 			}
-			if(getChildByName("vid") != null) ns.close();
+			if (getChildByName("vid") != null) {
+				ns.close();
+				mainClass.resetMusicVol();
+			}
 			mainClass.showSplash(new ScreenPP1(mainClass, selectedSemen));
 		}
 		

@@ -214,7 +214,8 @@ package Screen
 		private function onImageLoaded(e:Event):void {			
 			var targetLoader:Loader = Loader(e.target.loader);
 			targetLoader.width = 400;
-			targetLoader.height = 260;
+			//targetLoader.height = 260;
+			targetLoader.height = (targetLoader.content.height / targetLoader.content.width) * targetLoader.width;
 		}
 				
 		private function getDataError(event:SQLErrorEvent):void {
@@ -259,11 +260,11 @@ package Screen
 		}
 		
 		private function inAnim12():void {
-			TweenLite.to(btnService, 0.5, { alpha:1, scaleX:1, scaleY:1, delay: 1.0, ease:Circ.easeOut, onComplete: inAnim2()} );
+			TweenLite.to(btnService, 0.5, { alpha:1, scaleX:1, scaleY:1, delay: 0.9, ease:Circ.easeOut, onComplete: inAnim2()} );
 		}
 		
 		private function inAnim2():void {
-			TweenLite.to(btnKontak, 0.5, { alpha:1, scaleX:1, scaleY:1, delay: 0.9, ease:Circ.easeOut, onComplete: inAnim3()} );
+			TweenLite.to(btnKontak, 0.5, { alpha:1, scaleX:1, scaleY:1, delay: 1.0, ease:Circ.easeOut, onComplete: inAnim3()} );
 		}
 		private function inAnim3():void {
 			TweenLite.to(btnPrestasi, 0.5, { alpha:1, scaleX:1, scaleY:1, delay: 0.8, ease:Circ.easeOut, onComplete: inAnim4()} );

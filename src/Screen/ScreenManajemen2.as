@@ -5,6 +5,7 @@ package Screen
 	import Asset.McShade;
 	import flash.data.SQLResult;
 	import flash.display.MovieClip;
+	import flash.display.Shape;
 	import flash.errors.SQLError;
 	import flash.events.DataEvent;
 	import flash.events.MouseEvent;
@@ -12,6 +13,7 @@ package Screen
 	import flash.data.SQLStatement;
 	import flash.events.ProgressEvent;
 	import flash.events.TimerEvent;
+	import flash.filesystem.FileStream;
 	import flash.net.FileFilter;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
@@ -21,6 +23,8 @@ package Screen
 	import flash.events.SQLEvent;
 	import flash.filesystem.File;
 	import flash.events.Event;
+	import flash.filesystem.FileMode;
+	import flash.utils.ByteArray;
 	
 	import Asset.BtnDelete;
 	
@@ -73,6 +77,9 @@ package Screen
 		private var loadTimer:Timer;
 		private var flagUpdate:Boolean;
 		private var flagCopyVideo:Boolean;
+		private var inStream:FileStream;
+		private var outStream:FileStream;
+		private var progressBar:MC_VID_FILLRED;
 		
 		// 1: Project Performance
 		// 2: Tech Development
@@ -550,27 +557,102 @@ package Screen
 			}
 			var pathToFile:String = File.applicationDirectory.resolvePath(fileVidName).nativePath;
 			var someFile:File = new File(pathToFile);
-			vidFile.addEventListener(Event.COMPLETE, copyDone);
-			vidFile.copyToAsync(someFile);
-			mcLoading.txtProgress.text = "Copying file...";
+			
+			// stream
+			inStream = new FileStream();
+			outStream = new FileStream();
+			
+			inStream.addEventListener(ProgressEvent.PROGRESS, onProgress);
+			inStream.addEventListener(Event.COMPLETE, onReady);
+			
+			inStream.openAsync(vidFile, FileMode.READ);
+			outStream.openAsync(someFile, FileMode.WRITE);
+					
+			//vidFile.addEventListener(Event.COMPLETE, copyDone);
+			//vidFile.copyToAsync(someFile);
+			
+			mcLoading.txtProgress.width = 200;
+			mcLoading.txtProgress.text = "Copying...";
+			
+			progressBar = new MC_VID_FILLRED();
+			progressBar.x = 400;
+			progressBar.y = 400;
+			progressBar.width = 5;
+			
+			var progressWhite:Shape = new Shape(); 
+			progressWhite.graphics.lineStyle(1, 0x000000, 0.0); 
+			progressWhite.graphics.beginFill(0xffffff, 1.0); 
+			progressWhite.graphics.drawRect(progressBar.x, progressBar.y, 500, progressBar.height); 
+			progressWhite.graphics.endFill(); 
+			
+			addChild(progressWhite);
+			addChild(progressBar);
 		}
 		
-		private function copyDone(event:Event):void {
+		private function onProgress(e:ProgressEvent):void {
+			// calculate the percentage
+			var pct:Number = Math.round(e.bytesLoaded/e.bytesTotal*100);
+
+			// if you want to update the progress bar:
+			mcLoading.txtProgress.text = "Copying... " + pct.toString() + " %";
+			progressBar.width = pct * 5;
+			
+			// if the ProgressEvent is fired, we have data available in the inStream, so we can start writing data
+			var bytes:ByteArray = new ByteArray();
+			inStream.readBytes(bytes, 0, inStream.bytesAvailable);
+			outStream.writeBytes(bytes, 0, bytes.length);
+		}
+
+
+		private function onReady(e:Event):void {
+			// the whole stream is read, so close the files
+			inStream.close();
+			outStream.close();
+
+			// dispatch a COMPLETE event to let listeners to this object know the copy is done
+			copyDone();
+		} 
+		
+		private function copyDone():void {
 			flagCopyVideo = true;
+			mcLoading.txtProgress.text = "Finalizing...";
+			
+			var myTimer:Timer = new Timer(1000, 1);
+			myTimer.start();
+			myTimer.addEventListener(TimerEvent.TIMER_COMPLETE, timerVideoDone);
+		}
+		
+		private function timerVideoDone(e:TimerEvent):void {
 			cekUpdateDone();
 		}
 		
 		private function cekUpdateDone():void {
 			if (videoAvailable){
-				if (flagUpdate && flagCopyVideo){
-					mainClass.showSplash(new ScreenManajemen1(mainClass));
+				if (flagUpdate && flagCopyVideo) {	
+					mcLoading.mcLoad.visible = false;
+					mcLoading.txtProgress.x -= 90;
+					mcLoading.txtProgress.width = 300;
+					mcLoading.txtProgress.text = "ARTIKEL BERHASIL DISIMPAN";
+					var myTimer:Timer = new Timer(2000, 1);
+					myTimer.start();
+					myTimer.addEventListener(TimerEvent.TIMER_COMPLETE, timerAllDone);
 				}
 			}
 			else {
-				if (flagUpdate){
-					mainClass.showSplash(new ScreenManajemen1(mainClass));
+				if (flagUpdate) {
+					mcLoading.mcLoad.visible = false;
+					mcLoading.txtProgress.x -= 90;
+					mcLoading.txtProgress.width = 300;
+					mcLoading.txtProgress.text = "ARTIKEL BERHASIL DISIMPAN";
+					var myTimer:Timer = new Timer(2000, 1);
+					myTimer.start();
+					myTimer.addEventListener(TimerEvent.TIMER_COMPLETE, timerAllDone);
 				}
 			}
+		}
+		
+		private function timerAllDone(e:TimerEvent):void {
+			mainClass.showSplash(new ScreenManajemen1(mainClass));
 		}
 		
 		private function getData2Error(event:SQLErrorEvent):void {
